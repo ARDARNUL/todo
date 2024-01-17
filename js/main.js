@@ -1,21 +1,36 @@
-vue.component('list',{
+Vue.component('Note',{
     template:`
-    <div class=""main">
-        <div id="cart1 cart">
-            <button v-on:click = " ">+</button>
+        <div id="infoCart">
+            <img src=""></img>
+            <input type="text" v-model="textCart" id="textCart" for="textCart" name="Name">
         </div>
-        <div id="cart2 cart">
-            <button v-on:click = " ">+</button>
+    `,
+    data(){
+        return{
+        textCart: []
+        }
+    },
+    method:{
+        saveCart(){
+            localStorage.setItem("textCart", this.textCart);
+            let searchCart = localStorage.getItem("textCart");
+        }
+    }
+})
+
+Vue.component('list',{
+    template:`
+    <div class="main">
+        <div id="column">
+            <Note></Note>
+            <button class="new">+</button>
         </div>
-        <div id="cart3 cart">
-            <button v-on:click = " ">+</button>
-        </div>
+        <div id="column"></div>
+        <div id="column"></div>
     </div>
-`
+`,
 })
 
 let todo = new Vue({
     el: '#todo'
-
 })
-
