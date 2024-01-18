@@ -294,3 +294,130 @@ Vue.component("task", {
 
     }
 });
+
+Vue.component("card", {
+    template: `
+<div class="card">
+<h3>{{name}}</h3>
+<ul >
+<li v-for="point in points"><task :block="block" :point="point[0]" :pblock="pblock" :done="point[1]" @checked="updatechecked" @updatetwo="updatetwo"></task></li>
+</ul>
+<p>{{dat}}</p>
+</div>
+    `,
+    data() {
+        return{
+        }
+    },
+    methods: {
+
+        updatechecked(point) {
+        this.count_of_checked+=1;
+
+        for(i in this.points){
+            if(this.points[i][0]==point && this.points[i][1] != true){
+                this.points[i][1] = true
+                break
+            }
+        }    
+
+        // console.log(this.points)
+        // console.log(this.count_of_checked)
+        // console.log(this.count_of_tasks)
+        if ((this.count_of_tasks) == (this.count_of_checked)){
+        var now = new Date() 
+        now = String(now);
+        console.log(this.name,this.points,this.card_id,now)
+        this.$emit("to-three",this.name,this.points,this.card_id,now);
+        }
+        else if ((this.count_of_tasks/2) <= (this.count_of_checked)){
+        this.$emit("to-two",this.name,this.points,this.card_id, this.count_of_checked);
+        }
+    },
+    updatetwo(point){
+        this.count_of_checked-=1;
+        if(this.column==2 || this.column==1){
+            for(i in this.points){
+                if(this.points[i][0]==point && this.points[i][1] == true){
+                    this.points[i][1] = false
+                    break
+                }
+            }
+            if(this.column==2){
+                if ((this.count_of_tasks/2) > (this.count_of_checked)){
+                    this.$emit("to-one",this.name,this.points,this.card_id, this.count_of_checked);
+
+                    }
+            }           
+        }
+    }
+    },
+    mounted() {
+        eventBus.$on('checkOne',checks => {
+            this.count_of_checked = 0
+            for(i in this.points){
+                if(this.points[i][1] == true){
+                    this.count_of_checked += 1
+                }
+            }    
+            
+            if ((this.count_of_tasks/2) <= (this.count_of_checked) && (this.count_of_tasks) != (this.count_of_checked)){
+            this.$emit("to-two",this.name,this.points,this.card_id, this.count_of_checked);
+        }
+            
+        })
+        eventBus.$on('checkTwo',checks => {
+            this.count_of_checked = 0
+            for(i in this.points){
+                if(this.points[i][1] == true){
+                    this.count_of_checked += 1
+                }
+            }    
+            
+            if ((this.count_of_tasks/2) > (this.count_of_checked)){
+            this.$emit("to-one",this.name,this.points,this.card_id, this.count_of_checked);
+        }
+            
+        })
+    },
+    props:{
+        name:{
+            type:String,
+            required:false,
+        },
+        points:{
+            type:Array,
+            required:false,
+        },
+        card_id:{
+            type:Number,
+            required:false,
+        },
+        count_of_checked:{
+            type:Number,
+            required:false,
+        },
+        dat:{
+            type:String,
+            required:false,
+        },
+        block:{
+            type:Boolean,
+            required:false
+        },
+        column:{
+            type:Number,
+            required:false,
+        },
+        pblock:{
+            tupe:Boolean,
+            required:false
+        }
+        
+    },
+    computed: {
+        count_of_tasks() {
+          return this.points.length;
+        },
+    }
+});
