@@ -11,7 +11,11 @@ body {
 }
 
 #column{
+    
+    
     height: 100%;
+    min-height: 800px;
+    min-width:400px;
     width: 200px;
     background-color: #686868;
     padding: 2px;
@@ -19,8 +23,9 @@ body {
 
 #infoCart{
     display: flex;
-    gap: 20px;
-    border: 1px solid #00B897;
+    gap: 5px;
+    border: 2px solid #00B897;
+    margin: 10px;
 }
 
 #textCart{
@@ -30,6 +35,8 @@ body {
     background-color: #D9D9D9;
     font-size: 10px;
     width: 100%;
+    min-height: 30px;
+    font-size: 30px;
 }
 
 .new{
@@ -43,5 +50,16 @@ body {
     display: flex;
     flex-direction: row;
     height: 100%;
-    gap: 20px;
+    gap: 200px;
+}
+
+.new{
+    min-height: 40px;
+    min-width: 40px;
+    font-size: 40px;
+    margin: 10px;
+}
+
+.img{
+    min-width: 40px;
 }

@@ -1,9 +1,8 @@
 Vue.component('Note',{
     template:`
-        <div id="infoCart">
-            <img src=""></img>
-            <input type="text" v-model="textCart" id="textCart" for="textCart" name="Name">
-        </div>
+    <form>
+        
+    </form>
     `,
     data(){
         return{
@@ -21,16 +20,22 @@ Vue.component('Note',{
 Vue.component('list',{
     template:`
     <div class="main">
-        <div id="column">
-            <Note></Note>
-            <button class="new">+</button>
-        </div>
+        <div id="column"></div>
         <div id="column"></div>
         <div id="column"></div>
     </div>
 `,
+    methods: {              
+        addToCart() {
+            this.$emit('add-to-cart',);
+        },
+    }
 })
 
 let todo = new Vue({
-    el: '#todo'
+    el: '#todo',
+    method: {
+        updateCart(id) {
+            
+    }}        
 })
