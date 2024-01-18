@@ -13,14 +13,14 @@ Vue.component("board", {
    <form @submit.prevent="onSubmit">
    <label for="name">Заголовок</label> <input type="text" id="name" v-model="name"> 
    
-   <label for="text1">Пункт1</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">Пункт2</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">Пункт3</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">Пункт4</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">Пункт5</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
    
    <button type="submit" value="Submit">Create</button>
-   </div>0
+   </div>
 
    <ul>
    <li class="error "v-for="error in errors">{{error}}</li>
@@ -63,6 +63,9 @@ Vue.component("board", {
 
         allColumns:[],
         cards:[],
+
+        points:[],
+        errors:[],
 
         name:null,
         text1:null,
@@ -120,5 +123,122 @@ watch:{
 
     },
 },  
+methods:{
+    onSubmit(){
+        this.errors=[]
+        this.points=[]
+        if(this.text1){
+            this.points.push([this.text1,false])
+        }
+        if(this.text2){
+            this.points.push([this.text2,false])
+        }
+        if(this.text3){
+            this.points.push([this.text3,false])
+        }
+        if(this.text4){
+            this.points.push([this.text4,false])
+        }
+        if(this.text5){
+            this.points.push([this.text5,false])
+        }
+        
+        if(this.points.length < 3){
+            this.errors.push("Должно быть заполнено от 3 пунктов")
+        }
+        if(!this.name){
+            this.errors.push("Не введён заголовок")
+        }
+        if(this.column1.length >=3){
+            this.errors.push("Достигнуто максимальное число карточек")                
+        }
+        if(this.blockOne){
+            this.errors.push("Второй столбец переполнен")
+        }
+        if(this.errors.length==0){
+            let info = {
+                name:this.name,
+                points:this.points,
+                card_id:this.card_id,
+                count_of_checked:0,
+            }
+            this.card_id +=1;
+            this.column1.push(info)
 
+        }
+    },
+    toColumnOne(name,points, card_id,count_of_checked){
+        if(this.column1.length<3){
+            let info = {
+                name:name,
+                points:points,
+                card_id:card_id,
+                count_of_checked:count_of_checked
+            }
+            for(i in this.column2){
+                
+                if(this.column2[i].card_id==card_id){
+                    this.column2.splice(i, 1)
+                    break
+                }
+            }
+
+            this.column1.push(info)
+        }
+
+    },
+    toColumnTwo(name,points, card_id,count_of_checked){
+        if(this.column2.length==5){
+            this.blockOne = true;
+        }
+        else{
+            let info = {
+                name:name,
+                points:points,
+                card_id:card_id,
+                count_of_checked:count_of_checked
+            }
+            for(i in this.column1){
+                
+                if(this.column1[i].card_id==card_id){
+                    this.column1.splice(i, 1)
+                    break
+                }
+            }
+
+            this.column2.push(info)
+        }
+        let checks = 1;
+        eventBus.$emit('checkTwo',checks)
+
+    },
+    toColumnThree(name,points, card_id,now){
+        let info = {
+            name:name,
+            points:points,
+            card_id:card_id,
+            dat:now,
+        }
+        for(i in this.column2){
+            
+            if(this.column2[i].card_id==card_id){
+                this.column2.splice(i, 1)
+                break
+            }
+        }
+
+        this.column3.push(info)
+        this.blockOne =false;
+        let checks = 1;
+        eventBus.$emit('checkOne',checks)
+    },
+    Cleen(){
+        this.column1=[],
+        this.column2=[],
+        this.column3=[],
+        this.dat=[],
+        this.blockOne= false
+
+  },
+    }
 })
