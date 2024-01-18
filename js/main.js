@@ -1,41 +1,14 @@
-Vue.component('Note',{
-    template:`
-    <form>
-        
-    </form>
-    `,
-    data(){
-        return{
-        textCart: []
-        }
+let app = new Vue({
+    el: "#app",
+    data: {
     },
-    method:{
-        saveCart(){
-            localStorage.setItem("textCart", this.textCart);
-            let searchCart = localStorage.getItem("textCart");
-        }
-    }
-})
+    methods: {
 
-Vue.component('list',{
-    template:`
-    <div class="main">
-        <div id="column"></div>
-        <div id="column"></div>
-        <div id="column"></div>
-    </div>
-`,
-    methods: {              
-        addToCart() {
-            this.$emit('add-to-cart',);
-        },
-    }
-})
+    },
+});
 
-let todo = new Vue({
-    el: '#todo',
-    method: {
-        updateCart(id) {
-            
-    }}        
+Vue.component("board", { 
+   template:`
+   <div class="board"></div>
+   `,
 })
