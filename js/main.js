@@ -3,37 +3,42 @@ let eventBus = new Vue()
 Vue.component("board", { 
    template:`
 <div class="board">
+    
+<div class="form">
+<form @submit.prevent="onSubmit">
+<label for="name">label</label> <input type="text" id="name" v-model="name"> 
 
-     <div class="form">
-    <form @submit.prevent="onSubmit">
-    <label for="name">label</label> <input type="text" id="name" v-model="name"> 
-   
-   <label for="text1">label</label> <input class="input" type="text" id="text1" v-model="text1"> 
-   <label for="text2">label</label> <input class="input" type="text" id="text2" v-model="text2"> 
-   <label for="text3">label</label> <input class="input" type="text" id="text3" v-model="text3"> 
-   <label for="text4">label</label> <input class="input" type="text" id="text4" v-model="text4"> 
-   <label for="text5">label</label> <input class="input" type="text" id="text5" v-model="text5"> 
+<label for="text1">label</label> <input class="input" type="text" id="text1" v-model="text1"> 
+<label for="text2">label</label> <input class="input" type="text" id="text2" v-model="text2"> 
+<label for="text3">label</label> <input class="input" type="text" id="text3" v-model="text3"> 
+<label for="text4">label</label> <input class="input" type="text" id="text4" v-model="text4"> 
+<label for="text5">label</label> <input class="input" type="text" id="text5" v-model="text5"> 
 
-   <button type="submit" class="but" value="Submit">+</button>
-   
-   </form>
+<button type="submit" class="but" value="Submit">+</button>
 
-   <ul>
-   <li class="error "v-for="error in errors">{{error}}</li>
-   </ul>
-   </div>
+</form>
 
-   <ul  id="columns">
+<ul>
+<li class="error "v-for="error in errors">{{error}}</li>
+</ul>
+
+ <button class="clear" v-on:click="Clear()">
+     ClearAll!!!
+ </button>
+
+</div>
+
+    <ul  id="columns">
     <li  class="column">
    <ul class="cards">
-   <li v-for="card in column1"><card :name="card.name" :column=1 :block="blockOne" :card_id="card.card_id" :count_of_checked="card.count_of_checked" :points="card.points" @to-two="toColumnTwo" >   </card></li>
+   <li v-for="card in column1"><card :name="card.name" :column=1 :block="blockOne" :card_id="card.card_id" :count_of_checked="card.count_of_checked" :countLabel="card.countLabel" @to-two="columnTwo" >   </card></li>
    </ul>
    </li>
    
    
    <li class="column">
    <ul>
-   <li  v-for="card in column2"><card :name="card.name" :column=2 :block=false :card_id="card.card_id" :count_of_checked="card.count_of_checked" :points="card.points" @to-three="toColumnThree" @to-one="toColumnOne" >  ></card></li>
+   <li  v-for="card in column2"><card :name="card.name" :column=2 :block=false :card_id="card.card_id" :count_of_checked="card.count_of_checked" :countLabel="card.countLabel" @to-three="columnThree" @to-one="columnOne" >  ></card></li>
    </ul>
    </li>
    
@@ -41,18 +46,13 @@ Vue.component("board", {
    
    <li class="column">
    <ul>
-   <li  v-for="card in column3"><card class="done_card" :name="card.name" :pblock=true :dat="card.dat" :column=3 :points="card.points" ></card></li>
+   <li  v-for="card in column3"><card class="done_card" :name="card.name" :pblock=true :dat="card.dat" :column=3 :countLabel="card.countLabel" ></card></li>
    </ul>
    </li>
    
    
    </ul>
-   <button
-         v-on:click="Cleen()"
-   >
-     cleen
-   </button>
-   </div>
+ </div>
    `,
    data() {
     return{
@@ -60,10 +60,10 @@ Vue.component("board", {
         column2:[],
         column3:[],
 
-        allColumns:[],
+        saveColumns:[],
         cards:[],
 
-        points:[],
+        countLabel:[],
         errors:[],
 
         name:null,
@@ -79,45 +79,45 @@ Vue.component("board", {
 },
 
 mounted(){
-    if (localStorage.getItem('allColumns')) {
+    if (localStorage.getItem('saveColumns')) {
         try {
-          this.allColumns = JSON.parse(localStorage.getItem('allColumns'));
-          this.column1 = this.allColumns[0]
-          this.column2 = this.allColumns[1]
-          this.column3 = this.allColumns[2]
-          this.blockOne = this.allColumns[3]
+          this.saveColumns = JSON.parse(localStorage.getItem('saveColumns'));
+          this.column1 = this.saveColumns[0]
+          this.column2 = this.saveColumns[1]
+          this.column3 = this.saveColumns[2]
+          this.blockOne = this.saveColumns[3]
         } catch(e) {
-          localStorage.removeItem('allColumns');
+          localStorage.removeItem('saveColumns');
         }
   }
 },
 watch:{
     column1(){
-          this.allColumns = [this.column1,this.column2,this.column3, this.blockOne]
+          this.saveColumns = [this.column1,this.column2,this.column3, this.blockOne]
           
 
 
 
 
-          const parsed = JSON.stringify(this.allColumns);
-          localStorage.setItem('allColumns', parsed);
+          const parsed = JSON.stringify(this.saveColumns);
+          localStorage.setItem('saveColumns', parsed);
 
 
     },
     column2(){
-          allColumns = [this.column1, this.column2, this.column3, this.blockOne]
+          saveColumns = [this.column1, this.column2, this.column3, this.blockOne]
 
           
-          const parsed = JSON.stringify(this.allColumns);
-          localStorage.setItem('allColumns', parsed);
+          const parsed = JSON.stringify(this.saveColumns);
+          localStorage.setItem('saveColumns', parsed);
 
     },
     column3(){
-          allColumns = [this.column1, this.column2, this.column3, this.blockOne]
+          saveColumns = [this.column1, this.column2, this.column3, this.blockOne]
 
           
-          const parsed = JSON.stringify(this.allColumns);
-          localStorage.setItem('allColumns', parsed);
+          const parsed = JSON.stringify(this.saveColumns);
+          localStorage.setItem('saveColumns', parsed);
 
 
     },
@@ -125,25 +125,25 @@ watch:{
 methods:{
     onSubmit(){
         this.errors=[]
-        this.points=[]
+        this.countLabel=[]
         if(this.text1){
-            this.points.push([this.text1,false])
+            this.countLabel.push([this.text1,false])
         }
         if(this.text2){
-            this.points.push([this.text2,false])
+            this.countLabel.push([this.text2,false])
         }
         if(this.text3){
-            this.points.push([this.text3,false])
+            this.countLabel.push([this.text3,false])
         }
         if(this.text4){
-            this.points.push([this.text4,false]) 
+            this.countLabel.push([this.text4,false]) 
         }
         if(this.text5){
-            this.points.push([this.text5,false])
+            this.countLabel.push([this.text5,false])
         }
         
-        if(this.points.length < 3){
-            this.errors.push("Должно быть заполнено от 3 пунктов")
+        if(this.countLabel.length < 3){
+            this.errors.push("Должно быть заполнено минимум 3 пункта")
         }
         if(!this.name){
             this.errors.push("Не введён заголовок")
@@ -157,7 +157,7 @@ methods:{
         if(this.errors.length==0){
             let info = {
                 name:this.name,
-                points:this.points,
+                countLabel:this.countLabel,
                 card_id:this.card_id,
                 count_of_checked:0,
             }
@@ -166,11 +166,11 @@ methods:{
 
         }
     },
-    toColumnOne(name,points, card_id,count_of_checked){
+    columnOne(name,countLabel, card_id,count_of_checked){
         if(this.column1.length<3){
             let info = {
                 name:name,
-                points:points,
+                countLabel:countLabel,
                 card_id:card_id,
                 count_of_checked:count_of_checked
             }
@@ -186,14 +186,14 @@ methods:{
         }
 
     },
-    toColumnTwo(name,points, card_id,count_of_checked){
+    columnTwo(name,countLabel, card_id,count_of_checked){
         if(this.column2.length==5){
             this.blockOne = true;
         }
         else{
             let info = {
                 name:name,
-                points:points,
+                countLabel:countLabel,
                 card_id:card_id,
                 count_of_checked:count_of_checked
             }
@@ -211,10 +211,10 @@ methods:{
         eventBus.$emit('checkTwo',checks)
 
     },
-    toColumnThree(name,points, card_id,now){
+    columnThree(name,countLabel, card_id,now){
         let info = {
             name:name,
-            points:points,
+            countLabel:countLabel,
             card_id:card_id,
             dat:now,
         }
@@ -231,7 +231,7 @@ methods:{
         let checks = 1;
         eventBus.$emit('checkOne',checks)
     },
-    Cleen(){
+    Clear(){
         this.column1=[],
         this.column2=[],
         this.column3=[],
@@ -245,11 +245,11 @@ methods:{
 Vue.component("card", {
     template: `
 <div class="card">
-<h3>{{name}}</h3>
-<ul >
-<li v-for="point in points"><task :block="block" :point="point[0]" :pblock="pblock" :done="point[1]" @checked="updatechecked" @updatetwo="updatetwo"></task></li>
-</ul>
-<p>{{dat}}</p>
+    <h3>{{name}}</h3>
+    <ul>
+    <li v-for="point in countLabel"><task :block="block" :point="point[0]" :pblock="pblock" :done="point[1]" @checked="updatechecked" @updatetwo="updatetwo"></task></li>
+    </ul>
+    <p>{{dat}}</p>
 </div>
     `,
     data() {
@@ -258,12 +258,12 @@ Vue.component("card", {
     },
     methods: {
 
-        updatechecked(point) {
+    updatechecked(point) {
         this.count_of_checked+=1;
 
-        for(i in this.points){
-            if(this.points[i][0]==point && this.points[i][1] != true){
-                this.points[i][1] = true
+        for(i in this.countLabel){
+            if(this.countLabel[i][0]==point && this.countLabel[i][1] != true){
+                this.countLabel[i][1] = true
                 break
             }
         }    
@@ -271,25 +271,25 @@ Vue.component("card", {
         if ((this.count_of_tasks) == (this.count_of_checked)){
         var now = new Date() 
         now = String(now);
-        console.log(this.name,this.points,this.card_id,now)
-        this.$emit("to-three",this.name,this.points,this.card_id,now);
+        console.log(this.name,this.countLabel,this.card_id,now)
+        this.$emit("to-three",this.name,this.countLabel,this.card_id,now);
         }
         else if ((this.count_of_tasks/2) <= (this.count_of_checked)){
-        this.$emit("to-two",this.name,this.points,this.card_id, this.count_of_checked);
+        this.$emit("to-two",this.name,this.countLabel,this.card_id, this.count_of_checked);
         }
     },
     updatetwo(point){
         this.count_of_checked-=1;
         if(this.column==2 || this.column==1){
-            for(i in this.points){
-                if(this.points[i][0]==point && this.points[i][1] == true){
-                    this.points[i][1] = false
+            for(i in this.countLabel){
+                if(this.countLabel[i][0]==point && this.countLabel[i][1] == true){
+                    this.countLabel[i][1] = false
                     break
                 }
             }
             if(this.column==2){
                 if ((this.count_of_tasks/2) > (this.count_of_checked)){
-                    this.$emit("to-one",this.name,this.points,this.card_id, this.count_of_checked);
+                    this.$emit("to-one",this.name,this.countLabel,this.card_id, this.count_of_checked);
 
                     }
             }           
@@ -299,27 +299,27 @@ Vue.component("card", {
     mounted() {
         eventBus.$on('checkOne',checks => {
             this.count_of_checked = 0
-            for(i in this.points){
-                if(this.points[i][1] == true){
+            for(i in this.countLabel){
+                if(this.countLabel[i][1] == true){
                     this.count_of_checked += 1
                 }
             }    
             
             if ((this.count_of_tasks/2) <= (this.count_of_checked) && (this.count_of_tasks) != (this.count_of_checked)){
-            this.$emit("to-two",this.name,this.points,this.card_id, this.count_of_checked);
+            this.$emit("to-two",this.name,this.countLabel,this.card_id, this.count_of_checked);
         }
             
         })
         eventBus.$on('checkTwo',checks => {
             this.count_of_checked = 0
-            for(i in this.points){
-                if(this.points[i][1] == true){
+            for(i in this.countLabel){
+                if(this.countLabel[i][1] == true){
                     this.count_of_checked += 1
                 }
             }    
             
             if ((this.count_of_tasks/2) > (this.count_of_checked)){
-            this.$emit("to-one",this.name,this.points,this.card_id, this.count_of_checked);
+            this.$emit("to-one",this.name,this.countLabel,this.card_id, this.count_of_checked);
         }
             
         })
@@ -329,7 +329,7 @@ Vue.component("card", {
             type:String,
             required:false,
         },
-        points:{
+        countLabel:{
             type:Array,
             required:false,
         },
@@ -361,16 +361,17 @@ Vue.component("card", {
     },
     computed: {
         count_of_tasks() {
-          return this.points.length;
+          return this.countLabel.length;
         },
     }
 });
 
 Vue.component("task", {
     template: `
-<div class="task" 
-@click="check"
-:class="{done:done}">{{point}}</div>
+    <div class="task" 
+        @click="check"
+        :class="{done:done}">{{point}}
+    </div>
     `,
     data() {
         return{
