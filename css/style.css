@@ -65,8 +65,7 @@ li{
 }
 
 .done{
-    text-decoration: line-through;
-    
+    color: #00B897;
 }
 
 .card{
