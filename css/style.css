@@ -2,3 +2,86 @@ body{
     width: 100%;
     flex-grow:1;
 }
+
+#columns{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 100%;  
+    width: 100%; 
+}
+
+.column{
+    min-height: 1000px;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    width: 400px;
+    height: 100%;
+    background-color: #686868;
+    border: 2px solid #00B897;
+    flex-grow:1;
+
+}
+.error{
+    font-weight: bolder;
+    padding: 10px 0;
+    margin: 0;
+}
+.form{
+    display: flex;
+    flex-direction: row;   
+    align-items: flex-start;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    min-width: 50%;
+    align-items: center;
+    border: 2px solid #00B897;
+    border-radius: 5px;
+    padding-bottom: 20px;
+    background-color: #686868;
+}
+input{
+    max-width: 90%;
+    border-radius: 4px;
+}
+
+label{
+    padding: 10px 5px 5px 10px;
+}
+
+ul{
+    list-style-type: none;
+    padding: 0;
+}
+li{
+    margin-top: 5px;
+}
+
+.done{
+    text-decoration: line-through;
+}
+
+.card{
+    border: 2px solid #00B897;
+    border-radius: 4px;
+    background-color: #8E8E8E;
+}
+
+.done_card{
+    background-color: #00B897;
+}
+
+.input{
+    outline: none;
+}
+
+.but{
+    background-color: #00B897;
+    border: none;
+    margin-top: 5px;
+    font-size: 20px
+}

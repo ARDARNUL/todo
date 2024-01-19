@@ -1,31 +1,30 @@
-let app = new Vue({
-    el: "#app",
-    data: {
-    },
-    methods: {
-
-    },
-});
+let eventBus = new Vue()
 
 Vue.component("board", { 
    template:`
 <div class="board">
-   <form @submit.prevent="onSubmit">
-   <label for="name">Заголовок</label> <input type="text" id="name" v-model="name"> 
+
+     <div class="form">
+    <form @submit.prevent="onSubmit">
+    <label for="name">label</label> <input type="text" id="name" v-model="name"> 
    
-   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
-   <label for="text1">label</label> <input type="text" id="text1" v-model="text1"> 
+   <label for="text1">label</label> <input class="input" type="text" id="text1" v-model="text1"> 
+   <label for="text2">label</label> <input class="input" type="text" id="text2" v-model="text2"> 
+   <label for="text3">label</label> <input class="input" type="text" id="text3" v-model="text3"> 
+   <label for="text4">label</label> <input class="input" type="text" id="text4" v-model="text4"> 
+   <label for="text5">label</label> <input class="input" type="text" id="text5" v-model="text5"> 
+
+   <button type="submit" class="but" value="Submit">+</button>
    
-   <button type="submit" value="Submit">Create</button>
-   </div>
+   </form>
 
    <ul>
    <li class="error "v-for="error in errors">{{error}}</li>
    </ul>
    </div>
+
+   <ul  id="columns">
+    <li  class="column">
    <ul class="cards">
    <li v-for="card in column1"><card :name="card.name" :column=1 :block="blockOne" :card_id="card.card_id" :count_of_checked="card.count_of_checked" :points="card.points" @to-two="toColumnTwo" >   </card></li>
    </ul>
@@ -57,9 +56,9 @@ Vue.component("board", {
    `,
    data() {
     return{
-        text1:[],
-        text2:[],
-        text3:[],
+        column1:[],
+        column2:[],
+        column3:[],
 
         allColumns:[],
         cards:[],
@@ -69,10 +68,10 @@ Vue.component("board", {
 
         name:null,
         text1:null,
-        text1:null,
-        text1:null,
-        text1:null,
-        text1:null,
+        text2:null,
+        text3:null,
+        text4:null,
+        text5:null,
 
         card_id:0,
 
@@ -83,9 +82,9 @@ mounted(){
     if (localStorage.getItem('allColumns')) {
         try {
           this.allColumns = JSON.parse(localStorage.getItem('allColumns'));
-          this.text1 = this.allColumns[0]
-          this.text2 = this.allColumns[1]
-          this.text3 = this.allColumns[2]
+          this.column1 = this.allColumns[0]
+          this.column2 = this.allColumns[1]
+          this.column3 = this.allColumns[2]
           this.blockOne = this.allColumns[3]
         } catch(e) {
           localStorage.removeItem('allColumns');
@@ -93,8 +92,8 @@ mounted(){
   }
 },
 watch:{
-    text1(){
-          this.allColumns = [this.text1,this.text2,this.text3, this.blockOne]
+    column1(){
+          this.allColumns = [this.column1,this.column2,this.column3, this.blockOne]
           
 
 
@@ -105,16 +104,16 @@ watch:{
 
 
     },
-    text2(){
-          allColumns = [this.text1, this.text2, this.text3, this.blockOne]
+    column2(){
+          allColumns = [this.column1, this.column2, this.column3, this.blockOne]
 
           
           const parsed = JSON.stringify(this.allColumns);
           localStorage.setItem('allColumns', parsed);
 
     },
-    text3(){
-          allColumns = [this.text1, this.text2, this.text3, this.blockOne]
+    column3(){
+          allColumns = [this.column1, this.column2, this.column3, this.blockOne]
 
           
           const parsed = JSON.stringify(this.allColumns);
@@ -137,7 +136,7 @@ methods:{
             this.points.push([this.text3,false])
         }
         if(this.text4){
-            this.points.push([this.text4,false])
+            this.points.push([this.text4,false]) 
         }
         if(this.text5){
             this.points.push([this.text5,false])
@@ -243,58 +242,6 @@ methods:{
     }
 })
 
-Vue.component("task", {
-    template: `
-<div class="task" 
-@click="check"
-:class="{done:done}">{{point}}</div>
-    `,
-    data() {
-        return{
-            
-        }
-    },
-    props:{
-        point:{
-            type: String,
-            required:false,
-        },
-        done:{
-            type: Boolean,
-            required:false,
-        },
-        block:{
-            type: Boolean,
-            required:false,
-        },       
-        pblock:{
-            tupe:Boolean,
-            required:false
-        }
-    },
-    methods:{
-        check(){
-            if(!this.pblock){
-                if(!this.done){
-                    if(!this.block){
-                        this.done=true
-                        this.$emit("checked",this.point);
-                    }
-                }
-                else{
-                    if(!this.block){
-                        this.done=false
-                        this.$emit("updatetwo",this.point);
-                    }
-                }
-            }
-
-
-        }
-
-    }
-});
-
 Vue.component("card", {
     template: `
 <div class="card">
@@ -321,9 +268,6 @@ Vue.component("card", {
             }
         }    
 
-        // console.log(this.points)
-        // console.log(this.count_of_checked)
-        // console.log(this.count_of_tasks)
         if ((this.count_of_tasks) == (this.count_of_checked)){
         var now = new Date() 
         now = String(now);
@@ -420,4 +364,65 @@ Vue.component("card", {
           return this.points.length;
         },
     }
+});
+
+Vue.component("task", {
+    template: `
+<div class="task" 
+@click="check"
+:class="{done:done}">{{point}}</div>
+    `,
+    data() {
+        return{
+            
+        }
+    },
+    props:{
+        point:{
+            type: String,
+            required:false,
+        },
+        done:{
+            type: Boolean,
+            required:false,
+        },
+        block:{
+            type: Boolean,
+            required:false,
+        },       
+        pblock:{
+            tupe:Boolean,
+            required:false
+        }
+    },
+    methods:{
+        check(){
+            if(!this.pblock){
+                if(!this.done){
+                    if(!this.block){
+                        this.done=true
+                        this.$emit("checked",this.point);
+                    }
+                }
+                else{
+                    if(!this.block){
+                        this.done=false
+                        this.$emit("updatetwo",this.point);
+                    }
+                }
+            }
+
+
+        }
+
+    }
+});
+
+let app = new Vue({
+    el: "#app",
+    data: {
+    },
+    methods: {
+
+    },
 });
