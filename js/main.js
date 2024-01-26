@@ -18,13 +18,13 @@ Vue.component("board", {
 <label for="point5">Пункт5</label> <input type="text" id="point5" v-model="point5"> 
 
 <button type="submit" class="but" value="Submit">Создать</button>
-<button class="but"
+<button type="button" class="but"
       v-on:click="Cleen()"
 >
   cleen
 </button>
 
-<button class="but" @click="showArhive=!showArhive">Open arhive</button>
+<button type="button" class="but" @click="showArhive=!showArhive">Open arhive</button>
 
 
 </form>
